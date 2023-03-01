@@ -1,0 +1,1821 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "4f10c40d",
+   "metadata": {},
+   "source": [
+    "## DATA 690 Homework 3 (60 points - Due on Sunday, October 2, 2022 by 11:00 pm ET)\n",
+    "\n",
+    "The output of this assignment for submission should be in PDF format **AND** .py or .ipynb. The name of the file should be as follows: Lastname_Firstname_Homework3.pdf (example: Thomas_Sunela_Homework3.pdf) **AND** Lastname_Firstname_Homework3.ipynb (example: Thomas_Sunela_Assignment3.ipynb. In short, you are submitting the python notebook as well as the pdf of that notebook. Do **NOT** submit .html file, the system will give you an error.\n",
+    "\n",
+    "    \n",
+    "Incorrect file name will cost you points!<br>\n",
+    "\n",
+    "Instructions for converting a Jupyter Python notebook to PDF: Go to the menu and choose, File --> Download As --> html. Open that html file and print it to PDF. Submit the PDF file **NOT** the html file.\n",
+    "\n",
+    "If you are using Google Colab, remember to review the PDF before submitting to ensure that all cells and answers are displayed in the PDF.\n",
+    "\n",
+    "**Things to note:**\n",
+    "\n",
+    "* Each cell should display an output\n",
+    "* Use only the basic Python concepts and methods\n",
+    "* Use both Markdown and code comments in the Jupyter Notebook as needed\n",
+    "\n",
+    "### IF YOU ARE MAKING ANY ASSUMPTIONS, WRITE THAT IN A MARKDOWN CELL OR COMMENT\n",
+    "### $\\color{red}{\\text{Answer the questions asked as well, not just code}}$\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "31e22e75",
+   "metadata": {},
+   "source": [
+    "# `tips`\n",
+    "\n",
+    "Food servers' tips in restaurants may be influenced by many factors, including the nature of the restaurant, size of the party, and table locations in the restaurant. Restaurant managers need to know which factors matter when they assign tables to food servers. For the sake of staff morale, they usually want to avoid either the substance or the appearance of unfair treatment of the servers, for whom tips (at least in restaurants in the United States) are a major component of pay.\n",
+    "\n",
+    "In one restaurant, a food server recorded the following data on all customers they served during an interval of two and a half months in early 1990. The restaurant, located in a suburban shopping mall, was part of a national chain and served a varied menu. In observance of local law the restaurant offered seating in a non-smoking section to patrons who requested it. Each record includes a day and time, and taken together, they show the server’s work schedule.\n",
+    "\n",
+    "A complete description of the variables and their meanings is available in the data dictionary table below:\n",
+    "\n",
+    "|obs  | Observation number |\n",
+    "|---  |---                 |\n",
+    "| total_bill | Total bill (cost of the meal), including tax, in US dollars |\n",
+    "| tip | Tip (gratuity) in US dollars |\n",
+    "| sex | Sex of person paying for the meal (0=male, 1=female) |\n",
+    "| smoker | Smoker in party? (0=No, 1=Yes) |\n",
+    "| day | Day of Week (4=Thur, 5=Fri, 6=Sat, 7=Sun) |\n",
+    "| time | Dinner, Lunch |\n",
+    "|size  | Size of the party |"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b6bf859e",
+   "metadata": {},
+   "source": [
+    "### Exercise 1: (1 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Read in `tips.csv` data.</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "c88d27a6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "%matplotlib inline\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "f655bfe9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day</th>\n",
+       "      <th>time</th>\n",
+       "      <th>size</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>16.99</td>\n",
+       "      <td>1.01</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>10.34</td>\n",
+       "      <td>1.66</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>21.01</td>\n",
+       "      <td>3.50</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>23.68</td>\n",
+       "      <td>3.31</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>24.59</td>\n",
+       "      <td>3.61</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   total_bill   tip  sex  smoker  day    time  size\n",
+       "0       16.99  1.01    0       0    7  Dinner     2\n",
+       "1       10.34  1.66    1       0    7  Dinner     3\n",
+       "2       21.01  3.50    1       0    7  Dinner     3\n",
+       "3       23.68  3.31    1       0    7  Dinner     2\n",
+       "4       24.59  3.61    0       0    7  Dinner     4"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "\n",
+    "#pd.read_csv reads the csv File\n",
+    "tips_df = pd.read_csv('tips.csv')\n",
+    "tips_df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4bc221dd",
+   "metadata": {},
+   "source": [
+    "### Exercise 2: (2 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Determine the number of rows and columns in the data. What does each row in the data represent?</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "4569acf0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(244, 7)"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "\n",
+    "#shape returns the number of rows and columns in the data\n",
+    "tips_df.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b3102334",
+   "metadata": {},
+   "source": [
+    "There are 244 Rows and 7 Columns in the data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4263e47f",
+   "metadata": {},
+   "source": [
+    "Each Row represent 'Tips recorded by the Food Server for each Bill'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "51e03c97",
+   "metadata": {},
+   "source": [
+    "### Exercise 3: (3 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Determine if there are any missing values in the data.</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "100d8052",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "total_bill    0\n",
+       "tip           0\n",
+       "sex           0\n",
+       "smoker        0\n",
+       "day           0\n",
+       "time          0\n",
+       "size          0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "\n",
+    "#Using isnull().sum() to determine missing data\n",
+    "tips_df.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1c39c1be",
+   "metadata": {},
+   "source": [
+    "There are no missing values in the Data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d6c27027",
+   "metadata": {},
+   "source": [
+    "### Exercise 4: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">The column names are not very descriptive. Use the `.rename()` method to rename the columns.</span>\n",
+    "\n",
+    "Rename the columns as follows:\n",
+    "+ `tip` to `tip_amount`\n",
+    "+ `day` to `day_of_week`\n",
+    "+ `size` to `party_size`\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "759af5ee",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Exercise Answer\n",
+    "\n",
+    "#Using rename() method to rename the columns\n",
+    "rename_columns = {'tip':'tip_amount', 'day':'day_of_week', 'size':'party_size'}\n",
+    "tips_df.rename(columns = rename_columns , inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "903ac759",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['total_bill', 'tip_amount', 'sex', 'smoker', 'day_of_week', 'time',\n",
+       "       'party_size'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Renamed Columns\n",
+    "tips_df.columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "08fab218",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip_amount</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day_of_week</th>\n",
+       "      <th>time</th>\n",
+       "      <th>party_size</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>16.99</td>\n",
+       "      <td>1.01</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>10.34</td>\n",
+       "      <td>1.66</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>21.01</td>\n",
+       "      <td>3.50</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>23.68</td>\n",
+       "      <td>3.31</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>24.59</td>\n",
+       "      <td>3.61</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   total_bill  tip_amount  sex  smoker  day_of_week    time  party_size\n",
+       "0       16.99        1.01    0       0            7  Dinner           2\n",
+       "1       10.34        1.66    1       0            7  Dinner           3\n",
+       "2       21.01        3.50    1       0            7  Dinner           3\n",
+       "3       23.68        3.31    1       0            7  Dinner           2\n",
+       "4       24.59        3.61    0       0            7  Dinner           4"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tips_df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ffa80af7",
+   "metadata": {},
+   "source": [
+    "### Exercise 5: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Extract the index using tips.index(). What type of index do you find? Is there a sensical column to use for the index? Why or why not?</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "7d799b93",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RangeIndex(start=0, stop=244, step=1)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "tips_df.index"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "4d28c954",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "pandas.core.indexes.range.RangeIndex"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "type(tips_df.index)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "956eb5f0",
+   "metadata": {},
+   "source": [
+    " What type of index do you find?\n",
+    "- So the index of tips_df is Range Index which is the default index.\n",
+    "\n",
+    "Is there a sensical column to use for the index? Why or why not?\n",
+    "- Yes, We can refer to each tip by the bill amount (total_bill) (by using meaningful Index). Though we have total_bill column it is not useful data to perform analysis on, bills are just convenient labels which are useful to understand which bill the tips refer to. \n",
+    "- We can refer to tip by integer location (using the default RangeIndex)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d0e47029",
+   "metadata": {},
+   "source": [
+    "### Exercise 6: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Recode the `sex`, `smoker`, and `day_of_week` variables to the coding in the data dictionary description table at the top of the notebook. For example: recode `day_of_week` from the numeric representation (4, 5, 6, 7) to the ('Thur', 'Fri', 'Sat', 'Sun'). </span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "26973e64",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0      male\n",
+       "1    female\n",
+       "2    female\n",
+       "3    female\n",
+       "4      male\n",
+       "Name: sex, dtype: object"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#recoding sex from 0 to male, 1 to female)\n",
+    "sex_replace = {0: 'male', 1:'female'}\n",
+    "tips_df['sex'].replace(sex_replace, inplace=True)\n",
+    "tips_df['sex'].head(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "02023783",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "42      No\n",
+       "124     No\n",
+       "109    Yes\n",
+       "214    Yes\n",
+       "113     No\n",
+       "Name: smoker, dtype: object"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#recoding smoker from 0 to No, 1 to Yes\n",
+    "smoker_replace = {0: 'No', 1:'Yes'}\n",
+    "tips_df['smoker'].replace(smoker_replace, inplace=True)\n",
+    "tips_df['smoker'].sample(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "9f30a737",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "12      Sun\n",
+       "0       Sun\n",
+       "1       Sun\n",
+       "184     Sun\n",
+       "129    Thur\n",
+       "Name: day_of_week, dtype: object"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "\n",
+    "#recoding `day_of_week` from the numeric representation 4, 5, 6, 7 to the 'Thur', 'Fri', 'Sat', 'Sun'\n",
+    "dayofweek_replace = {4: 'Thur', 5:'Fri', 6:'Sat', 7:'Sun'}\n",
+    "tips_df['day_of_week'].replace(dayofweek_replace, inplace=True)\n",
+    "tips_df['day_of_week'].sample(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "fea48154",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip_amount</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day_of_week</th>\n",
+       "      <th>time</th>\n",
+       "      <th>party_size</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>240</th>\n",
+       "      <td>27.18</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>145</th>\n",
+       "      <td>8.35</td>\n",
+       "      <td>1.5</td>\n",
+       "      <td>male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Thur</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>39</th>\n",
+       "      <td>31.27</td>\n",
+       "      <td>5.0</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>160</th>\n",
+       "      <td>21.50</td>\n",
+       "      <td>3.5</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>220</th>\n",
+       "      <td>12.16</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Fri</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "     total_bill  tip_amount     sex smoker day_of_week    time  party_size\n",
+       "240       27.18         2.0    male    Yes         Sat  Dinner           2\n",
+       "145        8.35         1.5    male     No        Thur   Lunch           2\n",
+       "39        31.27         5.0  female     No         Sat  Dinner           3\n",
+       "160       21.50         3.5  female     No         Sun  Dinner           4\n",
+       "220       12.16         2.2  female    Yes         Fri   Lunch           2"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tips_df.sample(5)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a1d3d4f7",
+   "metadata": {},
+   "source": [
+    "### Exercise 7: (4 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">How many people were in the largest party served by the waiter? The smallest?</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "e1b0f476",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "125    6\n",
+       "Name: party_size, dtype: int64"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "#Using nlargest(1) method to get the Largest Value of Party size\n",
+    "# sort ascending = False also works, tips_df['party_size'].sort_values(ascending=False).head(1)\n",
+    "\n",
+    "tips_df['party_size'].nlargest(1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e7a78f24",
+   "metadata": {},
+   "source": [
+    "There were 6 people in the largest party served by the waiter."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "e903f5e8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "67    1\n",
+       "Name: party_size, dtype: int64"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Using nsmallest(1) method to get the Smallest Value of Party size\n",
+    "# sort ascending = true also works, tips_df['party_size'].sort_values(ascending=True).head(1)\n",
+    "\n",
+    "tips_df['party_size'].nsmallest(1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d3f40efd",
+   "metadata": {},
+   "source": [
+    "There was only 1 person in the smallest party served by the waiter."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8a868ba9",
+   "metadata": {},
+   "source": [
+    "### Exercise 8: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Create a histogram of the `total_bill` variable using 20 bins. Include a title and customize at least one other aspect of the plot. </span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "19a911c8",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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FLimxhokSZI6Rm1zepn5jsycl5nzgVcBX83M10bE3KbdXkHjYbaSJEldr+5rvMby3ohYRONU4zDwhjbUIEmSVFyR4JWZg8Bg9f6cEn1KkqTWPPLII2zcuJGHH364bTUceuihbNgwuR4xOmPGDObNm8eBBx7Y8jHtmPGSJEkdZOPGjcycOZP58+cTsbdn1tdj27ZtzJw5+iYInSsz2bJlCxs3buSoo45q+bju+N6mJEnaZw8//DCzZs1qW+iajCKCWbNmjXuW0OAlSZIMXftgX35nBi9JkqRCvMZLkiQ9xvwV105oe8Mrl0xoe5OZM16SJKnttm7dyoc//OE97jM8PMynPvWpvbY1PDzMggULdrv9iiuu4Pzzzx9z2/Oe97xfaGNwcJAzzjhjr/22wuAlSZLa7oEHHpiw4LU//u3f/q3W9g1ekiSp7d797nfz/e9/n0WLFvG2t72Nt73tbSxYsICFCxfymc98BoAVK1bwjW98g0WLFnHJJZcwPDzMC17wAo4//niOP/74cYWmO+64g9NOO43e3l4uvPDCR9f39PRM+Gdr5jVekiSp7S688EKGhoZYu3Ytn/vc57j00ku59dZbuffeeznxxBM5+eSTWblyJRdffDHXXNN4zPNPf/pTVq9ezYwZM7j99ts5++yzuemmm1rq78Ybb2T9+vUcfPDBnHjiiSxZsoTFi8d8rvWEMnhJkqSOcsMNN3D22Wczbdo05syZwwtf+EK+9a1vccghhzxmv0ceeYTzzz+ftWvXMm3aNL773e+23Mepp57KrFmzAPjN3/xNbrjhBoOXJEmaejKzpf0uueQS5syZw6233srOnTuZMWNGy32MvgdXqfuYGbwkSdJjtOP2Dz09PWzbtg2Ak08+mY985COce+653HfffVx//fW8733vY9OmTY/uA40L8ufNm8cBBxzAqlWr2LFjR8v9rV69mvvuu4+DDjqIq666issvv3zCP9NYDF6SJKntZs2axUknncSCBQt46UtfyjHHHMOxxx5LRPDe976XpzzlKcyaNYvp06dz7LHHsnTpUs477zx+67d+i89+9rP09/fzhCc8oeX+nv/853POOefwve99j1e/+tVFTjMCRKvTee3U29ubQ0ND7S5DTQYHB+nr62t3GRrFcek8jklnclwea8OGDTzrWc9qaw2T7SHZu4z1u4uINZk5ZpLzdhKS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\n",
+      "text/plain": [
+       "<Figure size 720x504 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "#Histogram of the Total Bill\n",
+    "tips_df['total_bill'].plot(kind = 'hist',\n",
+    "                        bins = 20,\n",
+    "                        xlabel = 'Total Bill',\n",
+    "                        ylabel = 'Frequency',\n",
+    "                        title = 'Histogram of Total Bill',\n",
+    "                        legend = True,\n",
+    "                        grid = True,\n",
+    "                        xlim = (0,55),\n",
+    "                        ylim = (0,45),\n",
+    "                        figsize = (10,7)\n",
+    "                       )\n",
+    "#Using Matplotlib plt.xlabel as xlabel in df[].plot(xlabel='') is not working\n",
+    "plt.xlabel('Total Bill')\n",
+    "plt.show() "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c2bef41b",
+   "metadata": {},
+   "source": [
+    "### Exercise 9: (4 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">What is a 'typical' bill size? Is mean or median better when you say typical?</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "384c746f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "17.795"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "tips_df['total_bill'].median()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "77f1d858",
+   "metadata": {},
+   "source": [
+    "Median is accurate when we say typical. So the typical bill is 17.795"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d506b0ed",
+   "metadata": {},
+   "source": [
+    "### Exercise 10: (6 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Create a new variable, `tip_rate` which is the `tip_amount` divided by `total_bill`. Create a histogram of the new variable. </span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "4a329f98",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0    0.059447\n",
+       "1    0.160542\n",
+       "2    0.166587\n",
+       "3    0.139780\n",
+       "4    0.146808\n",
+       "Name: tip_rate, dtype: float64"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "tips_df['tip_rate'] = tips_df['tip_amount'] / tips_df['total_bill']\n",
+    "tips_df['tip_rate'].head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "9a9845f2",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 720x432 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "#Histogram of Tip Rate\n",
+    "tips_df['tip_rate'].plot(kind = 'hist',\n",
+    "                        xlabel= 'Tip Rate',\n",
+    "                        bins = 20,\n",
+    "                        title = 'Histogram of Tip Rate',\n",
+    "                        grid = True,\n",
+    "                        legend = True,\n",
+    "                        xlim = (0,1),\n",
+    "                        ylim = (0,90),\n",
+    "                        figsize = (10,6),\n",
+    "                       )\n",
+    "#Using Matplotlib xlabel as xlabel in df[].plot(xlabel='') is not working\n",
+    "plt.xlabel('Tip Rate')\n",
+    "plt.show()                       "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5818229a",
+   "metadata": {},
+   "source": [
+    "### Exercise 11: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Extract the entire row of data for the 10 largest and 10 smallest values of `tip_rate`. This can be done different ways but these steps are one way. First, extract the 10 largest values and save this as a DataFrame called 'largest'. Create a new variable called 'largest_indexes' which is the index of 'largest'. Use the `.loc()` method to extract all the data corresponding to those indexes.</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "d7739977",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "172    0.710345\n",
+       "178    0.416667\n",
+       "67     0.325733\n",
+       "232    0.291990\n",
+       "183    0.280535\n",
+       "109    0.279525\n",
+       "149    0.266312\n",
+       "93     0.263480\n",
+       "221    0.259314\n",
+       "51     0.252672\n",
+       "Name: tip_rate, dtype: float64"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "largest = tips_df['tip_rate'].nlargest(10)\n",
+    "largest"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "90cd5117",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Int64Index([172, 178, 67, 232, 183, 109, 149, 93, 221, 51], dtype='int64')"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "largest_indexes = largest.index\n",
+    "largest_indexes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "0db5e9df",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Entire Row of 10 Largest values of the Tip Rate\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip_amount</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day_of_week</th>\n",
+       "      <th>time</th>\n",
+       "      <th>party_size</th>\n",
+       "      <th>tip_rate</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>172</th>\n",
+       "      <td>7.25</td>\n",
+       "      <td>5.15</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.710345</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>178</th>\n",
+       "      <td>9.60</td>\n",
+       "      <td>4.00</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.416667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>67</th>\n",
+       "      <td>3.07</td>\n",
+       "      <td>1.00</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.325733</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>232</th>\n",
+       "      <td>11.61</td>\n",
+       "      <td>3.39</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.291990</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>183</th>\n",
+       "      <td>23.17</td>\n",
+       "      <td>6.50</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.280535</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>109</th>\n",
+       "      <td>14.31</td>\n",
+       "      <td>4.00</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.279525</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>149</th>\n",
+       "      <td>7.51</td>\n",
+       "      <td>2.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Thur</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.266312</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>93</th>\n",
+       "      <td>16.32</td>\n",
+       "      <td>4.30</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Fri</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.263480</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>221</th>\n",
+       "      <td>13.42</td>\n",
+       "      <td>3.48</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Fri</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.259314</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>51</th>\n",
+       "      <td>10.29</td>\n",
+       "      <td>2.60</td>\n",
+       "      <td>male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.252672</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "     total_bill  tip_amount     sex smoker day_of_week    time  party_size  \\\n",
+       "172        7.25        5.15  female    Yes         Sun  Dinner           2   \n",
+       "178        9.60        4.00    male    Yes         Sun  Dinner           2   \n",
+       "67         3.07        1.00    male    Yes         Sat  Dinner           1   \n",
+       "232       11.61        3.39  female     No         Sat  Dinner           2   \n",
+       "183       23.17        6.50  female    Yes         Sun  Dinner           4   \n",
+       "109       14.31        4.00    male    Yes         Sat  Dinner           2   \n",
+       "149        7.51        2.00  female     No        Thur   Lunch           2   \n",
+       "93        16.32        4.30    male    Yes         Fri  Dinner           2   \n",
+       "221       13.42        3.48    male    Yes         Fri   Lunch           2   \n",
+       "51        10.29        2.60    male     No         Sun  Dinner           2   \n",
+       "\n",
+       "     tip_rate  \n",
+       "172  0.710345  \n",
+       "178  0.416667  \n",
+       "67   0.325733  \n",
+       "232  0.291990  \n",
+       "183  0.280535  \n",
+       "109  0.279525  \n",
+       "149  0.266312  \n",
+       "93   0.263480  \n",
+       "221  0.259314  \n",
+       "51   0.252672  "
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "print('Entire Row of 10 Largest values of the Tip Rate')\n",
+    "tips_df.loc[largest_indexes,:]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "c50be0d0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "237    0.035638\n",
+       "102    0.056433\n",
+       "57     0.056797\n",
+       "0      0.059447\n",
+       "187    0.065660\n",
+       "210    0.066534\n",
+       "48     0.071804\n",
+       "146    0.072961\n",
+       "240    0.073584\n",
+       "184    0.073983\n",
+       "Name: tip_rate, dtype: float64"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "smallest = tips_df['tip_rate'].nsmallest(10)\n",
+    "smallest"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "9361f617",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Int64Index([237, 102, 57, 0, 187, 210, 48, 146, 240, 184], dtype='int64')"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "smallest_indexes = smallest.index\n",
+    "smallest_indexes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "6a2dc926",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Entire Row of 10 Smallest values of the Tip Rate\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip_amount</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day_of_week</th>\n",
+       "      <th>time</th>\n",
+       "      <th>party_size</th>\n",
+       "      <th>tip_rate</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>237</th>\n",
+       "      <td>32.83</td>\n",
+       "      <td>1.17</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.035638</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>102</th>\n",
+       "      <td>44.30</td>\n",
+       "      <td>2.50</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.056433</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>57</th>\n",
+       "      <td>26.41</td>\n",
+       "      <td>1.50</td>\n",
+       "      <td>male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.056797</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>16.99</td>\n",
+       "      <td>1.01</td>\n",
+       "      <td>male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.059447</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>187</th>\n",
+       "      <td>30.46</td>\n",
+       "      <td>2.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0.065660</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>210</th>\n",
+       "      <td>30.06</td>\n",
+       "      <td>2.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.066534</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>48</th>\n",
+       "      <td>28.55</td>\n",
+       "      <td>2.05</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.071804</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>146</th>\n",
+       "      <td>18.64</td>\n",
+       "      <td>1.36</td>\n",
+       "      <td>male</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Thur</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.072961</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>240</th>\n",
+       "      <td>27.18</td>\n",
+       "      <td>2.00</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.073584</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>184</th>\n",
+       "      <td>40.55</td>\n",
+       "      <td>3.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.073983</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "     total_bill  tip_amount     sex smoker day_of_week    time  party_size  \\\n",
+       "237       32.83        1.17  female    Yes         Sat  Dinner           2   \n",
+       "102       44.30        2.50    male    Yes         Sat  Dinner           3   \n",
+       "57        26.41        1.50    male     No         Sat  Dinner           2   \n",
+       "0         16.99        1.01    male     No         Sun  Dinner           2   \n",
+       "187       30.46        2.00  female    Yes         Sun  Dinner           5   \n",
+       "210       30.06        2.00  female    Yes         Sat  Dinner           3   \n",
+       "48        28.55        2.05  female     No         Sun  Dinner           3   \n",
+       "146       18.64        1.36    male     No        Thur   Lunch           3   \n",
+       "240       27.18        2.00    male    Yes         Sat  Dinner           2   \n",
+       "184       40.55        3.00  female    Yes         Sun  Dinner           2   \n",
+       "\n",
+       "     tip_rate  \n",
+       "237  0.035638  \n",
+       "102  0.056433  \n",
+       "57   0.056797  \n",
+       "0    0.059447  \n",
+       "187  0.065660  \n",
+       "210  0.066534  \n",
+       "48   0.071804  \n",
+       "146  0.072961  \n",
+       "240  0.073584  \n",
+       "184  0.073983  "
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "print('Entire Row of 10 Smallest values of the Tip Rate')\n",
+    "tips_df.loc[smallest_indexes,:]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "803f27fa",
+   "metadata": {},
+   "source": [
+    "### Exercise 12: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Create a bar graph showing the number of parties served on each day of the week. What day had the heaviest volume (in terms of number of tables served)? What day had the lowest volume?</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "bdef5d4c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<AxesSubplot:title={'center':'Bar Graph Showing Proportion of the Parties served on Each Day of the Week'}, xlabel='Day of the Week', ylabel='Parties Served'>"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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1llnnb7K2KwpSdIk89BDD7HyyiubmHVAElZeeeWFqsU0OZMkaRIyMeuOhX0vTM4kSZI6xD5nkiRNcjOOOH+xLu/mY1650GU++MEP8pSnPIX3vOc9izWWXr/4xS/Yd999ScI555zDuuuuO7B1Ddlhhx047rjjmDlz5mJbpjVnkiRpUvja177G7rvvzlVXXfWEJGaDYnImSZIG4uijj+a5z30uO+20E9dffz0An/3sZ3nRi17ExhtvzF577cUDDzzAvHnzWGeddZg/fz4A9957LzNmzHhseLirr76aLbbYgo022ohXv/rV3HXXXVxwwQUcf/zxfO5zn2PHHXccsdyxxx7LJz/5SQDe+c538pKXvASAiy66iNe97nUAXHjhhWy55ZZsuumm7L333tx3330AXHnllWy//fZsttlm7LLLLtx6661/tuxHH32UAw88kCOPPPJx7jWbNQdicVcfTxaLUg0uSVoyXXnllZx99tlcddVVLFiwgE033ZTNNtuMPffck7e85S0AHHnkkZxyyikceuih7LDDDpx//vnssccenH322ey1116j3hfsgAMO4IQTTmD77bfnAx/4AEcddRTHH388hxxyyJhNp9tttx0f+9jHOOyww5g1axZ//OMfmT9/Pj/4wQ/Ydtttuf322/nwhz/Md7/7XVZYYQU++tGP8vGPf5z3ve99HHrooXz9619n+vTpfPnLX+b9738/p556KgALFixg//335wUveAHvf//7H/e+G2hyluTlwL8D04DPVdUxw6bvDnwIeBRYABxeVT9op90MzAMeARZU1eJrzJUkSQN16aWX8upXv5onP/nJAOy2224AXHPNNRx55JHcfffd3Hfffeyyyy4AvPnNb+bYY49ljz324LTTTuOzn/3siMu95557uPvuu9l+++0BOPDAA9l77737immzzTbjyiuvZN68eTzpSU9i0003ZdasWVx66aV88pOf5Ec/+hHXXXcdW2+9NQAPP/wwW265Jddffz3XXHMNO++8MwCPPPIIq6666mPLfetb38prXvOaxZKYwQCTsyTTgBOBnYHZwBVJzquq63pmuwg4r6oqyUbAV4Dn9UzfsapuH1SMkiRpcEa6hcQb3vAGvva1r7Hxxhtz+umn8/3vfx+ArbfemptvvpmLL76YRx55hBe84AWLPZ5lllmGGTNmcNppp7HVVlux0UYb8b3vfY9f//rXbLDBBvz6179m55135qyzzvqzcj/72c94/vOfzw9/+MMRl7vVVlvxve99j3e/+90st9xyjzvOQfY52xy4oapurKqHgbOB3XtnqKr7qqrawRWAQpIkLfG22247zj33XB588EHmzZvHN77xDQDmzZvHqquuyvz58/nSl770Z2UOOOAA9ttvP974xjeOutyVVlqJpz/96Vx66aUAnHHGGY/VovUb13HHHcd2223Htttuy0knncQmm2xCErbYYgsuu+wybrjhBgAeeOABfvnLX/Lc5z6XuXPnPpaczZ8/n2uvvfaxZR500EG84hWvYO+992bBggV9xzKaQTZrrg7c0jM8G3jx8JmSvBr4CPAMoLdTUgEXJingM1V18kgrSXIwcDDAWmuttXgilyRpEpmIPr+bbrop++yzD5tssglrr7022267LQAf+tCHePGLX8zaa6/NC1/4QubNm/dYmf33358jjzyS/fbbb8xlf/7zn+eQQw7hgQce4NnPfjannXZa33Ftu+22HH300Wy55ZassMIKLLfcco/FNn36dE4//XT2228//vjHPwLw4Q9/mPXXX59zzjmHww47jHvuuYcFCxZw+OGH8/znP/+x5b7rXe/innvu4fWvfz1f+tKXWGqpRa//yp8qrhavJHsDu1TVm9vh1wObV9Who8y/HfCBqtqpHV6tquYkeQbwHeDQqrpkrHXOnDmzZs2atVi3Y1F4QcDIvCBAkp4YP//5z9lggw0mOoyFds455/D1r3+dM844Y6JDWexGek+SXDlSn/pB1pzNBtbsGV4DmDPazFV1SZJ1k6xSVbdX1Zx2/G1JzqVpJh0zOZMkSUumQw89lG9+85tccMEFEx3KhBtkcnYFsF6SdYDfAfsCr+2dIclzgF+3FwRsCiwL3JFkBWCpqprXvn4Z8C8DjFWSJE2gE0444S/Gvf3tb+eyyy77s3F/93d/N2afNIA77riDl770pX8x/qKLLmLllVd+fIE+AQaWnFXVgiTvAL5NcyuNU6vq2iSHtNNPAvYCDkgyH3gQ2KdN1J4JnNte5bE0cGZVfWtQsUqSpO458cQTF6ncyiuvzNVXX714g3kCDfQ+Z1V1AXDBsHEn9bz+KPDREcrdCGw8yNgkSZrMqmrEW1noibew/ft9fJMkSZPMcsstxx133LHQSYEWv6rijjvuWKj7n/n4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\n",
+      "text/plain": [
+       "<Figure size 720x360 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "tips_df['day_of_week'].value_counts(normalize=True).plot(kind='bar',\n",
+    "                                                   xlabel= 'Day of the Week',\n",
+    "                                                   ylabel= 'Parties Served',\n",
+    "                                                   title='Bar Graph Showing Proportion of the Parties served on Each Day of the Week',\n",
+    "                                                   rot =45,\n",
+    "                                                   legend = True,\n",
+    "                                                   figsize=(10,5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dd97c7e1",
+   "metadata": {},
+   "source": [
+    "- 'Saturday' has the Heaviest Volume and 'Friday' has the lowest volume in terms of number of tables served."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "dec2ef7c",
+   "metadata": {},
+   "source": [
+    "### Exercise 13: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Find the total number of orders where the `total_bill` is greater than 40 dollars AND the party size was 4 or less.</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "ae688d7c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total number of orders where the total bill > 40 dollars and the party size was 4 or less is: 8\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Exercise Answer\n",
+    "filt = (tips_df['total_bill'] > 40) & (tips_df['party_size'] <= 4)\n",
+    "\n",
+    "# Calculating total number of orders using sum()\n",
+    "Tot_orders = filt.sum()\n",
+    "print(f'Total number of orders where the total bill > 40 dollars and the party size was 4 or less is: {Tot_orders}')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "60f2773a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>total_bill</th>\n",
+       "      <th>tip_amount</th>\n",
+       "      <th>sex</th>\n",
+       "      <th>smoker</th>\n",
+       "      <th>day_of_week</th>\n",
+       "      <th>time</th>\n",
+       "      <th>party_size</th>\n",
+       "      <th>tip_rate</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>59</th>\n",
+       "      <td>48.27</td>\n",
+       "      <td>6.73</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.139424</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>95</th>\n",
+       "      <td>40.17</td>\n",
+       "      <td>4.73</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Fri</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.117750</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>102</th>\n",
+       "      <td>44.30</td>\n",
+       "      <td>2.50</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.056433</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>170</th>\n",
+       "      <td>50.81</td>\n",
+       "      <td>10.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.196812</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>182</th>\n",
+       "      <td>45.35</td>\n",
+       "      <td>3.50</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0.077178</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>184</th>\n",
+       "      <td>40.55</td>\n",
+       "      <td>3.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Sun</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.073983</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>197</th>\n",
+       "      <td>43.11</td>\n",
+       "      <td>5.00</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>Thur</td>\n",
+       "      <td>Lunch</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.115982</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>212</th>\n",
+       "      <td>48.33</td>\n",
+       "      <td>9.00</td>\n",
+       "      <td>female</td>\n",
+       "      <td>No</td>\n",
+       "      <td>Sat</td>\n",
+       "      <td>Dinner</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.186220</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "     total_bill  tip_amount     sex smoker day_of_week    time  party_size  \\\n",
+       "59        48.27        6.73  female     No         Sat  Dinner           4   \n",
+       "95        40.17        4.73  female    Yes         Fri  Dinner           4   \n",
+       "102       44.30        2.50    male    Yes         Sat  Dinner           3   \n",
+       "170       50.81       10.00  female    Yes         Sat  Dinner           3   \n",
+       "182       45.35        3.50  female    Yes         Sun  Dinner           3   \n",
+       "184       40.55        3.00  female    Yes         Sun  Dinner           2   \n",
+       "197       43.11        5.00    male    Yes        Thur   Lunch           4   \n",
+       "212       48.33        9.00  female     No         Sat  Dinner           4   \n",
+       "\n",
+       "     tip_rate  \n",
+       "59   0.139424  \n",
+       "95   0.117750  \n",
+       "102  0.056433  \n",
+       "170  0.196812  \n",
+       "182  0.077178  \n",
+       "184  0.073983  \n",
+       "197  0.115982  \n",
+       "212  0.186220  "
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tips_df.loc[filt, :]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1cf248e8",
+   "metadata": {},
+   "source": [
+    "### Exercise 14: (5 points)\n",
+    "<span  style=\"color:purple; font-size:16px\">Who pays the bill more often: men or women? Create a pie chart and create a Series showing the proportion of bills paid by each `sex`.</span>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "4a49174e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Exercise Answer"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "5dfe6229",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<AxesSubplot:title={'center':'Pie Chart showing proportion of bills paid by each Sex'}, ylabel='sex'>"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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ZZt7eZlktslrqvzMcc7NADCzl4FHnXPOzGYAMYI3wuvNbAjBGn1b+41/BTjEzM4If+9JcOLamcUOHwWROr7A+eefv9G11147cNiwYcvuu+++gm+hPu200zbr06fP6t/+9rcLCz3tqpbMZoAM8OlJLIPx5o0ICjlGsA/zpjmXTYD1gd7hpaul7YAVwCfABwSHjnw3/Lf15d0KKdz2rMj5uSXn9xaCDjgPeNw5d1g4lDG5jWkYcHjrIQspDG9FHEukdyvk9DKp+Aud3eZvf/vbwAcffPC1HXbYYWUh5y1FEIw3LwwvUzu/faPxaSmvufQCVhOU7dqXZHZFO1OKokbgnfDnY9u5zSTgFDM7JVybHu6ce7Ek6SIgMmvERx555OB58+b1OOSQQ7Y97LDDFr/55ps9Z86c2Wv16tX2q1/9av7RRx/90bhx4wbcd999/VpaWmz27Nm9Tj755AUrV66sue222wY0NDS0PPzww69tvPHGqy+99NINr7vuuoGrVq2yWCy2YuLEiXP69u271refXn755R4nnXTS4MWLF9f17NmzZfz48XOHDx/+ia/lr3pBcS8NL9I1FxEMTZwGPNbObc4j2KA33cyM4BOM9qYokGiMTQITJkx4a6ONNlo1ZcqUV5cuXVo7atSoppdeemnmk08+OXvs2LGDmpqaagBeffXVXnfeeeebzz333MwLL7xw8969e7fMnDnzld13333p1VdfPQDgqKOO+vCll16aOXv27Fe233775ePGjduw9fyOP/74La+88sq3Xn755ZkXX3zxvB//+MeDS73MIs65jHNuWM7vxzrnJuZe55x71jm3nXPui865XzvnYuH1k9fsuuacW+6c+5FzbufwPirhAorMGnGuyZMnrz9p0qR+48aN2wRgxYoV9vrrrzcA7L333kv69+/f0r9//5Y+ffqsHj169EcAO++887Lp06f3BnjhhRd6nXPOOZsvWbKkdunSpbUjR47M5k4/m83WvPjii31Gjx69zZr/W7lypZVsAUWkokSyiJ1zTJw48fVdd911rXHCp556ar2Ghob/7dlRU1NDz5493Zqfm5ubDeDEE0/cauLEia/vtddey8eNGzdgypQpa+0bu3r1avr27ds8a9asV0qxPCJS2SIzNJFr1KhRTZdeeunGLS3BsO7TTz/dpYOhL1u2rGbw4MGrVqxYYbfeeusGra/fYIMNWgYNGrTy2muv7Q/Q0tLCs88+qwOui0ibIlnEqVRqfnNzs+2www47DhkyZKexY8du3pX7JxKJ+XvsscfQfffdd7shQ4a0uQHulltuefO6667bcPvtt99xyJAhO9155539ChJeRKpOyY41MW3atMyuu+5abt84KgvTpk3bcNddd435ziEifkRyjVhEpJyoiEVEPFMRi4h4piIWEfFMRSwi4pmKWETEMxVxnu6///6+o0aN2tZ3DhGpPv6+4pxsLOhhMElmOz0MpohIOYrUGvHs2bMbttpqq52OOOKILYcMGbLTIYccstU999zTd8SIETtsueWWwx5//PHejz/+eO/hw4fvMHTo0B2HDx++w7Rp03q0nk5TU1PN6NGjY8OGDRs6dOjQHW+66aZ+HhZHRKpE5A768/bbb/e87bbb3txtt93m7rLLLkNvvvnmAc8///ysCRMm9Lvgggs2vf322+dMnTp1Vn19Pffcc0/fM888c9CkSZPeyJ3G2WefvemoUaOa7rjjjsz7779fu/vuuw895JBDmtZff/2W9uYrItKeyBXx5ptvvmKPPfZYDrDddtstP+CAA5pqamoYMWLEsvPPP3+zxYsX1x5xxBFbZTKZnmbmVq1a9ZnDV7Z3GM0RI0bowO8i0mWRK+L2DnNZW1vL6tWrbcyYMZuPHDlyySOPPPLG7NmzGw444IDtW0+jvcNoioisi0iNEeejqampdtCgQSsBrr766s+ceQO6fxhNEZFcKuJWxowZsyCZTA4aMWLEDqtXr27zNt09jKaISC4dBrMM6DCYItGmNWIREc9UxCIinqmIRUQ8K2URt7S0tOiU8q2Ej4m+CCISYaUs4pcWLVrUqDL+VEtLiy1atKgReMl3FhHxp2Rf6Ghubj5+wYIF4xcsWDAMDYms0QK81NzcfLzvICLiT8l2XxMRkbZpzVRExDMVsYiIZypiERHPVMQiIp6piEVEPFMRi4h4piIWEfFMRSwi4pmKWETEMxWxiIhn/w/kncl2PHxOPwAAAABJRU5ErkJggg==\n",
+      "text/plain": [
+       "<Figure size 576x432 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Create pie chart, with some added features\n",
+    "tips_df['sex'].value_counts(normalize=True).plot(kind='pie',\n",
+    "                                                   title='Pie Chart showing proportion of bills paid by each Sex',\n",
+    "                                                   figsize=(8,6),\n",
+    "                                                   legend = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "7d7e6bf9",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "female    0.643443\n",
+       "male      0.356557\n",
+       "Name: sex, dtype: float64"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Series showing the proportion of bills paid by each sex\n",
+    "tips_by_sex = pd.Series(tips_df['sex'].value_counts(normalize=True))\n",
+    "tips_by_sex"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f1279f3e",
+   "metadata": {},
+   "source": [
+    "Who pays the bill more often: men or women? \n",
+    "- Female Pay the Bill more often"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
